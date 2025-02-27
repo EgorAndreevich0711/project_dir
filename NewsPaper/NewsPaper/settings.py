@@ -45,13 +45,10 @@ ROOT_URLCONF = 'NewsPaper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Добавлено: Искать шаблоны на уровне проекта
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                 os.path.join(BASE_DIR, 'news', 'templates', 'news'),
-                ],
 
-        # Оставляем True: шаблоны встроенных приложений (например, админки)
-        # нужно искать в директориях приложений
+        'DIRS': [],
+
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
