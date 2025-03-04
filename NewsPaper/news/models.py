@@ -34,7 +34,6 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=20, choices=CATEGORY_CHOISES, default=ARTICLE)
     dataCreations = models.DateTimeField(auto_now_add=True)
@@ -42,6 +41,7 @@ class Post(models.Model):
     title = models.CharField(max_length=128)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
+
 
     def like(self):
         self.rating += 1
@@ -55,8 +55,8 @@ class Post(models.Model):
         return self.text[0:128] + '...'
 
     def __str__(self):
-        dataf = 'Post from {}'.format(self.dataCreations.strftime('%d.%m.%Y %H:%M'))
-        return f"{dataf},{self.author},{self.title}"
+        #dataf = 'Post from {}'.format(self.dataCreations.strftime('%d.%m.%Y %H:%M'))
+        return f"{self.author},{self.text}"
 
 
 class PostCategory(models.Model):
