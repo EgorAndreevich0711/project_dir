@@ -6,12 +6,12 @@ Posts
 
 {% block content %}
    <h1>Все новости</h1>
-    <p><h3>Всего новостей: {{ Posts|length }}</h3></p>
+    <p><h3>Всего новостей: {{paginator.count}}</h3></p>
+   <hr>
    <h3>{{ time_now|date:'d M Y' }}</h3>
    <!-- Если в переменной next_sale будет None,
    то выведется указанный в фильтре текст -->
    <h3> {{ next_post|default_if_none:"Чуть позже будут новости!" }} </h3>
-
    <hr>
    {% if Posts%}
        <table>
@@ -32,5 +32,24 @@ Posts
        </table>
    {% else %}
        <h2>Новостей нет!</h2>
+   {% endif %}
+{% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
    {% endif %}
 {% endblock content %}

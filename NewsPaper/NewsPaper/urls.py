@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('pages/', include('django.contrib.flatpages.urls')),
-    path('news/', include('news.urls')),  # Включаем URL-маршруты приложения news
+   path('admin/', admin.site.urls),
+   path('', include('protect.urls')),
+   path('post/', include('news.urls')),
+   path('sign/', include('sign_app.urls')),
+   path('accounts/', include('allauth.urls')),
+
 ]

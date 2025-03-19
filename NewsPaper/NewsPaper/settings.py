@@ -14,26 +14,50 @@ SECRET_KEY = 'django-insecure-4tcvpw^*+b50+37#-b!!2npcnlg*v#=0mna*-@x02e7z4#-92b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.yandex',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
-    'django.contrib.sites',
-    'news',
     'accounts',
-
+    'news',
+    'django_filters',
+    'sign_app',
+    'protect',
 ]
+
 SITE_ID = 1
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
+
+
+
+ACCOUNT_FORMS = {'signup': 'sign_app.models.BasicSignupForm'}
+#SOCIALACCOUNT_FORMS = {
+#   'signup': 'accounts.forms.MyCustomSocialSignupForm'
+#}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -42,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -49,10 +75,7 @@ ROOT_URLCONF = 'NewsPaper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
-
-
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,6 +88,10 @@ TEMPLATES = [
     }
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 WSGI_APPLICATION = 'NewsPaper.wsgi.application'
 
@@ -124,3 +151,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+
+
