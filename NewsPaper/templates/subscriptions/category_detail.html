@@ -1,0 +1,25 @@
+{# templates/subscriptions/category_detail.html #}
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ category.name }}</h2>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'subscribe' %}">
+        {% csrf_token %}
+        <input type="hidden" name="category" value="{{ category_id }}">
+        {% if user in category.subscribers.all %}
+            <button type="submit">Отписаться</button>
+        {% else %}
+            <button type="submit">Подписаться</button>
+        {% endif %}
+    </form>
+    {% else %}
+        <a href="{% url 'login' %}">Войдите, чтобы подписаться</a>
+    {% endif %}
+    <h3>Статьи в этой категории</h3>
+    <ul>
+        {% for post in posts %}
+            <li><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

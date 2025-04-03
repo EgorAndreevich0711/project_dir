@@ -1,0 +1,13 @@
+{# templates/subscriptions/weekly_newsletter.html #}
+<p>Уважаемый {{ user.username }},</p>
+
+<p>Предлагаем вашему вниманию список новых статей в категории "{{ category.name }}", появившихся за последнюю неделю:</p>
+
+<ul>
+    {% for post in posts %}
+        <li><a href="{{ site_url }}{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<p>С уважением,<br>
+Команда NewsPortal</p>

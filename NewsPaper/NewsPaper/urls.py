@@ -8,5 +8,4 @@ urlpatterns = [
    path('post/', include('news.urls')),
    path('sign/', include('sign_app.urls')),
    path('accounts/', include('allauth.urls')),
-
 ]

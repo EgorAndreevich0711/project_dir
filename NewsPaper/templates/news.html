@@ -9,9 +9,8 @@ Posts
     <p><h3>Всего новостей: {{paginator.count}}</h3></p>
    <hr>
    <h3>{{ time_now|date:'d M Y' }}</h3>
-   <!-- Если в переменной next_sale будет None,
-   то выведется указанный в фильтре текст -->
-   <h3> {{ next_post|default_if_none:"Чуть позже будут новости!" }} </h3>
+
+   <h3> {{next_post|default_if_none:"Чуть позже будут новости!" }} </h3>
    <hr>
    {% if Posts%}
        <table>
@@ -19,13 +18,19 @@ Posts
                <td>Заголовок</td>
                <td>Дата публикации</td>
                <td>Текст</td>
+               <td>Категория</td>
            </tr>
 
            {% for Post in Posts %}
            <tr>
                <td>{{ Post.title|censor }}</td>
-               <td>{{ Post.dataCreations|date:'d M y' }}</td>
+               <td>{{ Post.dateCreation|date:'d M y' }}</td>
                <td>{{ Post.text|censor|truncatechars:20 }}</td>
+               <td>
+                    {% for category in Post.postCategory.all %}
+                   <a href="{% url 'news:category_list' category.id %}">{{category}}</a>
+                    {% endfor %}
+               </td>
            </tr>
            {% endfor %}
 

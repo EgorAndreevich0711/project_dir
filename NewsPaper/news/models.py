@@ -1,8 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
-
 NEWS = 'NW'
 ARTICLE = 'AR'
 
@@ -34,19 +33,17 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
+    subscribers = models.ManyToManyField(User, related_name='categories', blank=True)
+
 
     def __str__(self):
         return self.name
 
 
 class Post(models.Model):
-    CATEGORY_CHOICES = (
-        ('NW', 'Новость'),
-        ('AR', 'Статья'),
-    )
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='NW')
-    dataCreations = models.DateTimeField(auto_now_add=True)
+    dateCreation= models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=128)
     text = models.TextField()
@@ -68,23 +65,18 @@ class Post(models.Model):
         return f"{self.title} by {self.author}"
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[str(self.id)])
+        return reverse('news:post', kwargs={'pk': self.pk})
 
 
 
 class PostCategory(models.Model):
-    postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
-    categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.postThrough} from the category: {self.categoryThrough}"
-
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 class Comment(models.Model):
-    commentPost = models.ForeignKey(Post, on_delete=models.CASCADE)
-    userPost = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
-    dataCreation = models.DateTimeField(auto_now_add=True)
+    dateCreation = models.DateTimeField(auto_now_add=True)
     rating = models.SmallIntegerField(default=0)
 
     def like(self):
@@ -96,4 +88,11 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f"Comment by {self.userPost} on {self.commentPost} at {self.dataCreation}"
+        return f"Comment on {self.post} at {self.dateCreation}"
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'category')

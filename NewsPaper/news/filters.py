@@ -13,7 +13,7 @@ class PostFilter(FilterSet):
         empty_label= 'Все авторы'
     )
     dataCreations__gt =DateFilter(
-        field_name='dataCreations',
+        field_name='dateCreation',
         lookup_expr='gt',
         label='Позже указанной даты',
         widget=forms.DateInput(attrs={'type': 'date'})
