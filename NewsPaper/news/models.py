@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 NEWS = 'NW'
 ARTICLE = 'AR'
@@ -96,3 +98,4 @@ class Subscription(models.Model):
 
     class Meta:
         unique_together = ('user', 'category')
+

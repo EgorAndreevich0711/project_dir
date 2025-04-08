@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'django_celery_beat',
+    'django_celery_results',
     'django_apscheduler',
     'accounts',
     'news.apps.NewsConfig',
@@ -217,3 +219,17 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Irkutsk'  # Замените на свой часовой пояс
+CELERY_BEAT_SCHEDULE = {
+    'weekly-digest': {
+        'task': 'news.tasks.send_weekly_digest',
+        'schedule': crontab(hour=8, minute=0, day_of_week=1),  # Понедельник 8:00
+    },
+}
